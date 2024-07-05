@@ -6,7 +6,7 @@ channels = [1258185894154866794,1112108028590825613,1175974812158537789,11093155
 
 
 headers = {
-    'Authorization': "MTI1ODE4NTUyNDA3ODcxMDk2MA.GCbtWR.6nNh27tXhMVchUne7wNSXmfdtvcuo6NhDVOeqM"
+    'Authorization': "MTI1ODE4NTUyNDA3ODcxMDk2MA.GcA5sk.SnWnqjvMvBJ8mALYEkcpPc__ojkkCkelaHvSnU"
 }
 
 with open('buyTemp.txt', 'r') as file:
