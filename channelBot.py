@@ -23,7 +23,6 @@ auth_token = os.getenv("DISCORD_AUTH_TOKEN")
 
 headers = {
     'Authorization': f"{auth_token}"
-    # 'Authorization': "MTI1ODE4NTUyNDA3ODcxMDk2MA.GcA5sk.SnWnqjvMvBJ8mALYEkcpPc__ojkkCkelaHvSnU"
 }
 
 with open('buyTemp.txt', 'r') as file:
