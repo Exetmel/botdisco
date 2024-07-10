@@ -3,6 +3,7 @@ import discord
 import requests
 import time
 import threading
+import asyncio
 from dotenv import load_dotenv
 
 import os
@@ -35,7 +36,7 @@ def home():
 async def fetch_channel_name(channel_id):
     channel = await client.fetch_channel(channel_id)
     return channel.name
-def repeat_function():
+async def repeat_function():
     while True:
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
         for channel_id in channels:
@@ -43,11 +44,15 @@ def repeat_function():
             response = requests.post(url, headers=headers, data=data)
             print(response.text)
             print(f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n")
-        time.sleep(60)  # Wait for 60 seconds before sending the next message
-
+        await asyncio.sleep(60)  # Wait for 60 seconds before sending the next message
+@client.event
+async def on_ready():
+    print(f'Logged in as {client.user}')
+    # Start the repeat_function
+    await repeat_function()
 if __name__ == '__main__':
     # Start the repeat_function in a separate thread
-    threading.Thread(target=repeat_function, daemon=True).start()
+    threading.Thread(target=lambda: client.run(auth_token), daemon=True).start()
     app.run(debug=True, host='0.0.0.0', port=5000)
 
 
