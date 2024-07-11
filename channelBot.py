@@ -36,22 +36,21 @@ def home():
 async def fetch_channel_name(channel_id):
     channel = await client.fetch_channel(channel_id)
     return channel.name
-async def repeat_function():
+def repeat_function():
     while True:
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
         for channel_id in channels:
-            channel_name = await fetch_channel_name(channel_id)
             url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
             response = requests.post(url, headers=headers, data=data)
             print(response.text)
-            print(f"Time: {current_time}, Channel: {channel_name}, Status Code: {response.status_code}\n")
-        asyncio.sleep(60)  # Wait for 60 seconds before sending the next message
+            print(f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n")
+        time.sleep(60)  # Wait for 60 seconds before sending the next message
 
-@client.event
-async def on_ready():
-    print(f'Logged in as {client.user}')
-    # Start the repeat_function
-    await repeat_function()
+# @client.event
+# async def on_ready():
+#     print(f'Logged in as {client.user}')
+#     # Start the repeat_function
+#     await repeat_function()
 
 if __name__ == '__main__':
     # Start the repeat_function in a separate thread
