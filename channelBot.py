@@ -1,5 +1,5 @@
 from flask import Flask
-import discord
+# import discord
 import requests
 import time
 import threading
@@ -12,8 +12,8 @@ load_dotenv()
 
 app = Flask (__name__)
 
-intents = discord.Intents.default()
-client = discord.Client(intents=intents)
+# intents = discord.Intents.default()
+# client = discord.Client(intents=intents)
 
 with open ('channel.txt', 'r') as file:
     channels = [line.strip() for line in file if line.strip()]
@@ -33,8 +33,9 @@ data = {'content': message_content}
 def home():
     return "Ads is Running!"
 async def fetch_channel_name(channel_id):
-    channel = await client.fetch_channel(channel_id)
-    return channel.name
+    # channel = await client.fetch_channel(channel_id)
+    channel = await fetch_channel_name(channel_id)
+    return channel
 def repeat_function():
     while True:
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
@@ -47,7 +48,8 @@ def repeat_function():
 
 if __name__ == '__main__':
     # Start the repeat_function in a separate thread
-    threading.Thread(target=repeat_function, daemon=True).start()
+    if not threading.active_count() > 1:
+        threading.Thread(target=repeat_function, daemon=True).start()
     app.run(debug=True, host='0.0.0.0', port=5000)
 
 
