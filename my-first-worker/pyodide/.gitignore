@@ -1,0 +1,19 @@
+# Ignore .env file
+.env
+
+# Ignore channels.txt and buyTemp.txt if they contain sensitive information
+channels.txt
+buyTemp.txt
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore virtual environment directory
+venv/
+
+# Ignore log files
+*.log
+
+# Ignore other sensitive or unnecessary files
+.DS_Store

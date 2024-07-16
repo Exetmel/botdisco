@@ -1,0 +1,9 @@
+git branch <branch_name>
+git switch <branch_name>
+git branch -D <branch_name>
+git add .
+git commit -m ""
+git push -u origin feature-x
+
+
+git stash

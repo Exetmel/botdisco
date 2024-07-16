@@ -1,9 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask
 import discord
 import requests
 import time
 import threading
 from dotenv import load_dotenv
+
 import os
 
 
@@ -30,12 +31,11 @@ with open('buyTemp.txt', 'r') as file:
 data = {'content': message_content}
 @app.route("/")
 def home():
-    return 'index.html'
+    return "Ads is Running!"
 async def fetch_channel_name(channel_id):
     channel = await client.fetch_channel(channel_id)
     return channel.name
 def repeat_function():
-    
     while True:
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
         for channel_id in channels:
