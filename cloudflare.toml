@@ -1,0 +1,9 @@
+[project]
+name = "discobot"
+
+[build]
+command = "python channelBot.py freeze"
+directory = "output"
+
+[env]
+PYTHON_VERSION = "Python 3.11.5"
