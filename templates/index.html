@@ -19,5 +19,42 @@
       >
       <button type="submit">Update Channel</button>
     </form>
+    <button id="startButton">Start Auto Message</button>
+    <button id="stopButton">Stop Auto Message</button>
+    <script>
+      document
+        .getElementById("startButton")
+        .addEventListener("click", function () {
+          fetch("/start_repeat_function", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              alert(data.status);
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+
+      document
+        .getElementById("stopButton")
+        .addEventListener("click", function () {
+          fetch("/stop_repeat_function", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              alert(data.status);
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
   </body>
 </html>

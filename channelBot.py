@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import discord
 import requests
 import time
 import threading
 from dotenv import load_dotenv, set_key
-import tkinter as tk
 import os
 
 
@@ -30,6 +29,8 @@ with open('buyTemp.txt', 'r') as file:
     message_content = file.read().strip()
     
 data = {'content': message_content}
+
+stop_event = threading.Event()
 @app.route("/")
 def home():
     token = os.getenv("DISCORD_AUTH_TOKEN", "")
@@ -62,36 +63,47 @@ def update_channel():
     print(f"Updated channel text: {cleaned_channel_text}")
     return redirect(url_for('home'))
 
-def fetch_channel_name(channel_id):
-    channel = fetch_channel_name(channel_id)
-    return channel if channel else "unknown channel"
-
+# def fetch_channel_name(channel_id):
+#     return "unknown channel"
 
 
 def repeat_function():
-    last_messages = {}
-    while True:
+    # last_messages = {}
+    while not stop_event.is_set():
+        print("repeat_function loop started")
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
         for channel_id in channels:
-            if last_messages.get(channel_id) != message_content:
+            # if last_messages.get(channel_id) != message_content:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
                 response = requests.post(url, headers=headers, data=data)
                 print(response.text)
                 print(f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n")
-                last_messages[channel_id] = message_content
-        time.sleep(60)  # Wait for 60 seconds before sending the next message
+                # last_messages[channel_id] = message_content
+        print("repeat_function sleeping for 5 sec")
+        stop_event.wait(5)  # Wait for 60 seconds before sending the next message
 
-# root = tk.Tk()
-# update_button = tk.Button(root, text="Update Channel", command=update_channel)
-# update_button.pack()
-
-# root.mainloop()
-
-if __name__ == '__main__':
-    # Start the repeat_function in a separate thread
+@app.route("/start_repeat_function", methods=['POST'])
+def start_repeat_function():
+    global stop_event
+    stop_event.clear()
+    print("Received request to start repeat_function")
     if not any(thread.name == 'repeat_function_thread' for thread in threading.enumerate()):
-        thread = threading.Thread(target=repeat_function, daemon=True)
+        thread = threading.Thread(target=repeat_function, daemon=True, name='repeat_function_thread')
         thread.start()
         print("Started repeat_function in a separate thread.")
+        print("Current threads:", threading.enumerate())
+        return jsonify({"status": "started"}), 200
+    else:
+        print("repeat_function is already running.")
+        return jsonify({"status": "already running"}), 200
+    
+@app.route("/stop_repeat_function", methods=['POST'])
+def stop_repeat_function():
+    global stop_event
+    stop_event.set()
+    print("Received request to stop repeat_function")
+    return jsonify({"status": "stopped"}), 200
+    
+if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
 
