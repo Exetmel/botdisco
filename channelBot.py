@@ -62,16 +62,17 @@ def repeat_function():
             print(f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n")
         time.sleep(60)  # Wait for 60 seconds before sending the next message
 
+# @client.event
+# async def on_ready():
+#     print(f'Logged in as {client.user}')
+#     # Start the repeat_function
+#     await repeat_function()
+
 if __name__ == '__main__':
     # Start the repeat_function in a separate thread
     if not any(thread.name == "RepeatFunctionThread" for thread in threading.enumerate()):
         thread = threading.Thread(target=repeat_function, name="RepeatFunctionThread", daemon=True)
         thread.start()
     app.run(debug=True, host='0.0.0.0', port=5000)
-
-
-
-
-
 
 
