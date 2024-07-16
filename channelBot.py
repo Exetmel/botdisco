@@ -30,6 +30,8 @@ with open('buyTemp.txt', 'r') as file:
     
 data = {'content': message_content}
 
+logs = []
+
 stop_event = threading.Event()
 @app.route("/")
 def home():
@@ -45,7 +47,14 @@ def home():
             message_content = file.read()
     except FileNotFoundError:
         message_content = ""
-    return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content)
+        
+    try:
+        with open('logs.txt', 'r') as file:
+            logs = file.read()
+    except FileNotFoundError:
+        logs = "No logs available"
+        
+    return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content, logs = logs)
 
 # Edit Token 
 @app.route("/update_token", methods=['POST'])
@@ -83,14 +92,18 @@ def update_channel():
 
 # Loop message Function 
 def repeat_function():
+    last_messages = {}
     while not stop_event.is_set():
         print("repeat_function loop started")
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
         for channel_id in channels:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
                 response = requests.post(url, headers=headers, data=data)
-                print(response.text)
-                print(f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n")
+                log_entry = f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n"
+                print(log_entry)
+                with open('logs.txt', 'a') as log_file:
+                    log_file.write(log_entry)
+                last_messages[channel_id] = message_content
         print("repeat_function sleeping for 5 sec")
         stop_event.wait(5)  # Wait for 60 seconds before sending the next message
 
@@ -117,6 +130,9 @@ def stop_repeat_function():
     global stop_event
     stop_event.set()
     print("Received request to stop repeat_function")
+    
+    with open('logs.txt', 'w') as log_file:
+        log_file.write("")
     return jsonify({"status": "stopped"}), 200
     
 if __name__ == '__main__':

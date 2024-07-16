@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Python ads</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #logs {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        max-height: 300px;
+        overflow-y: scroll;
+      }
+      .log-entry {
+        border-bottom: 1px solid #ccc;
+        padding: 10px 0;
+      }
+    </style>
   </head>
   <body>
     <div>
@@ -14,6 +30,7 @@
           type="text"
           id="token"
           name="token"
+          cols="50"
           value="{{ token }}"
           required
         />
@@ -21,19 +38,36 @@
       </form>
       <form action="/update_channel" method="post">
         <label for="channel_text">Channel Text:</label>
-        <textarea id="channel_text" name="channel_text" required>
-{{channel_text}}></textarea
+        <textarea
+          id="channel_text"
+          name="channel_text"
+          rows="4"
+          cols="50"
+          required
+        >
+{{channel_text}}</textarea
         >
         <button type="submit">Update Channel</button>
       </form>
       <form action="{{ url_for('update_message_content') }}" method="post">
         <label for="message_content">Message Content:</label>
-        <textarea id="message_content" name="message_content" rows="4" cols="50">{{ message_content }}</textarea>
+        <textarea
+          id="message_content"
+          name="message_content"
+          rows="4"
+          cols="50"
+        >
+{{ message_content }}</textarea
+        >
         <button type="submit">Update Message</button>
-    </form>
+      </form>
     </div>
     <button id="startButton">Start Auto Message</button>
     <button id="stopButton">Stop Auto Message</button>
+    <div id="logs">
+      <h2>Logs</h2>
+      <pre>{{ logs }}</pre>
+    </div>
     <script>
       document
         .getElementById("startButton")
