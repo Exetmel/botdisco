@@ -6,6 +6,18 @@
     <title>Python ads</title>
   </head>
   <body>
-    <h1>Python ads</h1>
+    <h1>Discord Free Ad</h1>
+    <form action="/update_token" method="post">
+      <label for="token">Input Token:</label>
+      <input type="text" id="token" name="token" value="{{ token }}" required />
+      <button type="submit">Submit</button>
+    </form>
+    <form action="/update_channel" method="post">
+      <label for="channel_text">Channel Text:</label>
+      <textarea id="channel_text" name="channel_text" required>
+{{channel_text}}></textarea
+      >
+      <button type="submit">Update Channel</button>
+    </form>
   </body>
 </html>
