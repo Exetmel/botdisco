@@ -6,19 +6,32 @@
     <title>Python ads</title>
   </head>
   <body>
-    <h1>Discord Free Ad</h1>
-    <form action="/update_token" method="post">
-      <label for="token">Input Token:</label>
-      <input type="text" id="token" name="token" value="{{ token }}" required />
-      <button type="submit">Submit</button>
-    </form>
-    <form action="/update_channel" method="post">
-      <label for="channel_text">Channel Text:</label>
-      <textarea id="channel_text" name="channel_text" required>
+    <div>
+      <h1>Discord Free Ad</h1>
+      <form action="/update_token" method="post">
+        <label for="token">Input Token:</label>
+        <input
+          type="text"
+          id="token"
+          name="token"
+          value="{{ token }}"
+          required
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <form action="/update_channel" method="post">
+        <label for="channel_text">Channel Text:</label>
+        <textarea id="channel_text" name="channel_text" required>
 {{channel_text}}></textarea
-      >
-      <button type="submit">Update Channel</button>
+        >
+        <button type="submit">Update Channel</button>
+      </form>
+      <form action="{{ url_for('update_message_content') }}" method="post">
+        <label for="message_content">Message Content:</label>
+        <textarea id="message_content" name="message_content" rows="4" cols="50">{{ message_content }}</textarea>
+        <button type="submit">Update Message</button>
     </form>
+    </div>
     <button id="startButton">Start Auto Message</button>
     <button id="stopButton">Stop Auto Message</button>
     <script>

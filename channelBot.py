@@ -39,8 +39,15 @@ def home():
             channel_text = file.read()
     except FileNotFoundError:
         channel_text = ""
-    return render_template('index.html', token=token, channel_text = channel_text)
+        
+    try:
+        with open('buyTemp.txt', 'r') as file:
+            message_content = file.read()
+    except FileNotFoundError:
+        message_content = ""
+    return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content)
 
+# Edit Token 
 @app.route("/update_token", methods=['POST'])
 def update_token():
     new_token = request.form['token']
@@ -54,6 +61,16 @@ def update_token():
     print(f"Updated DISCORD_AUTH_TOKEN: {new_token}")
     return redirect(url_for('home'))
 
+@app.route("/update_message_content", methods=['POST'])
+def update_message_content():
+    new_message_content = request.form['message_content']
+    with open('buyTemp.txt', 'w') as file:
+        file.write(new_message_content)
+    global data
+    data = {'content': new_message_content}
+    print(f"Updated message content: {new_message_content}")
+    return redirect(url_for('home' ))
+# Editing Channel 
 @app.route("/update_channel", methods=['POST'])
 def update_channel():
     channel_text = request.form['channel_text']
