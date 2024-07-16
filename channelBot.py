@@ -63,25 +63,22 @@ def update_channel():
     print(f"Updated channel text: {cleaned_channel_text}")
     return redirect(url_for('home'))
 
-# def fetch_channel_name(channel_id):
-#     return "unknown channel"
 
-
+# Loop message Function 
 def repeat_function():
-    # last_messages = {}
     while not stop_event.is_set():
         print("repeat_function loop started")
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
         for channel_id in channels:
-            # if last_messages.get(channel_id) != message_content:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
                 response = requests.post(url, headers=headers, data=data)
                 print(response.text)
                 print(f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n")
-                # last_messages[channel_id] = message_content
         print("repeat_function sleeping for 5 sec")
         stop_event.wait(5)  # Wait for 60 seconds before sending the next message
 
+
+# Start Button Functions 
 @app.route("/start_repeat_function", methods=['POST'])
 def start_repeat_function():
     global stop_event
@@ -96,7 +93,8 @@ def start_repeat_function():
     else:
         print("repeat_function is already running.")
         return jsonify({"status": "already running"}), 200
-    
+
+# Stop Button Function 
 @app.route("/stop_repeat_function", methods=['POST'])
 def stop_repeat_function():
     global stop_event
