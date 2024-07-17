@@ -22,46 +22,46 @@
     </style>
   </head>
   <body>
-    <div>
-      <h1>Discord Free Ad</h1>
-      <form action="/update_token" method="post">
-        <label for="token">Input Token:</label>
-        <input
-          type="text"
-          id="token"
-          name="token"
-          cols="50"
-          value="{{ token }}"
-          required
-        />
-        <button type="submit">Submit</button>
-      </form>
-      <form action="/update_channel" method="post">
-        <label for="channel_text">Channel Text:</label>
-        <textarea
-          id="channel_text"
-          name="channel_text"
-          rows="4"
-          cols="50"
-          required
-        >
-{{channel_text}}</textarea
-        >
-        <button type="submit">Update Channel</button>
-      </form>
-      <form action="{{ url_for('update_message_content') }}" method="post">
-        <label for="message_content">Message Content:</label>
-        <textarea
-          id="message_content"
-          name="message_content"
-          rows="4"
-          cols="50"
-        >
-{{ message_content }}</textarea
-        >
-        <button type="submit">Update Message</button>
-      </form>
-    </div>
+    <h1>Discord Free Ad</h1>
+    <form action="{{ url_for('update_all') }}" method="post">
+      <label for="token">Input Token:</label>
+      <input
+        type="text"
+        id="token"
+        name="token"
+        cols="50"
+        value="{{ token }}"
+        required
+      /><br /><br />
+
+      <label for="channel_text">Channel Text:</label>
+      <textarea
+        id="channel_text"
+        name="channel_text"
+        rows="4"
+        cols="50"
+        required
+      >
+          {{channel_text}}</textarea
+      ><br /><br />
+
+      <label for="message_content">Message Content:</label>
+      <textarea id="message_content" name="message_content" rows="4" cols="50">
+        {{message_content}}</textarea
+      >
+      <br /><br />
+      <label for="interval">Repeat Interval (seconds):</label>
+      <input
+        type="number"
+        id="interval"
+        name="interval"
+        value="{{ interval }}"
+        required
+      /><br /><br />
+
+      <button type="submit">Update all</button>
+    </form>
+
     <button id="startButton">Start Auto Message</button>
     <button id="stopButton">Stop Auto Message</button>
     <div id="logs">
