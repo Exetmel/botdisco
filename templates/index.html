@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Python ads</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -22,21 +26,19 @@
     </style>
   </head>
   <body>
-    <div>
+    <div class="container">
       <h1>Discord Free Ad</h1>
-      <form action="/update_token" method="post">
+      <form action="{{ url_for('update_all') }}" method="post">
         <label for="token">Input Token:</label>
         <input
           type="text"
           id="token"
           name="token"
           cols="50"
-          value="{{ token }}"
+          value="{{token}}"
           required
-        />
-        <button type="submit">Submit</button>
-      </form>
-      <form action="/update_channel" method="post">
+        /><br /><br />
+
         <label for="channel_text">Channel Text:</label>
         <textarea
           id="channel_text"
@@ -45,11 +47,9 @@
           cols="50"
           required
         >
-{{channel_text}}</textarea
-        >
-        <button type="submit">Update Channel</button>
-      </form>
-      <form action="{{ url_for('update_message_content') }}" method="post">
+      {{channel_text | e}}</textarea
+        ><br /><br />
+
         <label for="message_content">Message Content:</label>
         <textarea
           id="message_content"
@@ -57,16 +57,27 @@
           rows="4"
           cols="50"
         >
-{{ message_content }}</textarea
+      {{message_content | e}}</textarea
         >
-        <button type="submit">Update Message</button>
+        <br /><br />
+        <label for="interval">Repeat Interval (seconds):</label>
+        <input
+          type="number"
+          id="interval"
+          name="interval"
+          value="{{interval}}"
+          required
+        /><br /><br />
+
+        <button type="submit">Update all</button>
       </form>
-    </div>
-    <button id="startButton">Start Auto Message</button>
-    <button id="stopButton">Stop Auto Message</button>
-    <div id="logs">
-      <h2>Logs</h2>
-      <pre>{{ logs }}</pre>
+
+      <button id="startButton">Start Auto Message</button>
+      <button id="stopButton">Stop Auto Message</button>
+      <div id="logs">
+        <h2>Logs</h2>
+        <pre>{{ logs |e }}</pre>
+      </div>
     </div>
     <script>
       document

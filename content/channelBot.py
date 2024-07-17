@@ -19,7 +19,9 @@ with open ('channel.txt', 'r') as file:
     channels = [item.strip().replace('>', '') for item in file.read().split(',') if item.strip()]
     
 
-auth_token = os.getenv("DISCORD_AUTH_TOKEN")
+# auth_token = os.getenv("DISCORD_AUTH_TOKEN")
+with open ('token.txt', 'r') as file:
+    auth_token = [item.strip().replace('>', '') for item in file.read().split(',') if item.strip()]
 
 headers = {
     'Authorization': f"{auth_token}"
@@ -32,10 +34,22 @@ data = {'content': message_content}
 
 logs = []
 
+interval = 5
+
 stop_event = threading.Event()
+file_lock = threading.Lock() 
+
+
+
 @app.route("/")
 def home():
-    token = os.getenv("DISCORD_AUTH_TOKEN", "")
+    # token = os.getenv("DISCORD_AUTH_TOKEN", "")
+    token = auth_token
+    try:
+        with open ('token.txt', 'r') as file:
+            token = file.read()
+    except FileNotFoundError:
+        token = ""
     try:
         with open ('channel.txt', 'r') as file:
             channel_text = file.read()
@@ -54,40 +68,43 @@ def home():
     except FileNotFoundError:
         logs = "No logs available"
         
-    return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content, logs = logs)
+    return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content, logs = logs, interval=interval)
 
 # Edit Token 
-@app.route("/update_token", methods=['POST'])
-def update_token():
-    new_token = request.form['token']
-    os.environ["DISCORD_AUTH_TOKEN"] = new_token
-    
-    set_key('.env','DISCORD_AUTH_TOKEN', new_token)
+@app.route("/update_all", methods=['POST'])
+def update_all():
+    global interval
+    new_token = request.form['token'].strip()
+    new_channel_text = request.form['channel_text'].strip()
+    new_message_content = request.form['message_content'].strip()
+    interval = int(request.form['interval'].strip())
+    # os.environ["DISCORD_AUTH_TOKEN"] = new_token
+    with open('token.txt', 'w') as file:
+        file.write(new_token)
+    # set_key('.env','DISCORD_AUTH_TOKEN', new_token)
     global headers
     headers = {
         'Authorization': f"{new_token}"
     }
-    print(f"Updated DISCORD_AUTH_TOKEN: {new_token}")
-    return redirect(url_for('home'))
+    print(f"Updated TOKEN: {new_token}")
+    
 
-@app.route("/update_message_content", methods=['POST'])
-def update_message_content():
-    new_message_content = request.form['message_content']
+    cleaned_channel_text = new_channel_text.replace('>', '').replace(' ', '')
+    with open('channel.txt', 'w') as file:
+        file.write(cleaned_channel_text)
+    print(f"Updated channel text: {cleaned_channel_text}")
+
     with open('buyTemp.txt', 'w') as file:
         file.write(new_message_content)
     global data
     data = {'content': new_message_content}
     print(f"Updated message content: {new_message_content}")
-    return redirect(url_for('home' ))
-# Editing Channel 
-@app.route("/update_channel", methods=['POST'])
-def update_channel():
-    channel_text = request.form['channel_text']
-    cleaned_channel_text = channel_text.replace('>', '')
-    with open('channel.txt', 'w') as file:
-        file.write(cleaned_channel_text)
-    print(f"Updated channel text: {cleaned_channel_text}")
+    
     return redirect(url_for('home'))
+# Editing Channel 
+# @app.route("/update_channel", methods=['POST'])
+# def update_channel():
+    
 
 
 # Loop message Function 
@@ -96,6 +113,14 @@ def repeat_function():
     while not stop_event.is_set():
         print("repeat_function loop started")
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
+        
+         # Read channels from channel.txt within the loop
+        with file_lock:
+            with open('channel.txt', 'r') as file:
+                channels = [item.strip().replace('>', '') for item in file.read().split(',') if item.strip()]
+                
+                
+                
         for channel_id in channels:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
                 response = requests.post(url, headers=headers, data=data)
@@ -105,7 +130,7 @@ def repeat_function():
                     log_file.write(log_entry)
                 last_messages[channel_id] = message_content
         print("repeat_function sleeping for 5 sec")
-        stop_event.wait(5)  # Wait for 60 seconds before sending the next message
+        stop_event.wait(interval)  # Wait for 60 seconds before sending the next message
 
 
 # Start Button Functions 
@@ -123,6 +148,8 @@ def start_repeat_function():
     else:
         print("repeat_function is already running.")
         return jsonify({"status": "already running"}), 200
+
+
 
 # Stop Button Function 
 @app.route("/stop_repeat_function", methods=['POST'])
