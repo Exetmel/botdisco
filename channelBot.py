@@ -37,6 +37,10 @@ logs = []
 interval = 5
 
 stop_event = threading.Event()
+file_lock = threading.Lock() 
+
+
+
 @app.route("/")
 def home():
     # token = os.getenv("DISCORD_AUTH_TOKEN", "")
@@ -64,11 +68,12 @@ def home():
     except FileNotFoundError:
         logs = "No logs available"
         
-    return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content, logs = logs)
+    return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content, logs = logs, interval=interval)
 
 # Edit Token 
 @app.route("/update_all", methods=['POST'])
 def update_all():
+    global interval
     new_token = request.form['token'].strip()
     new_channel_text = request.form['channel_text'].strip()
     new_message_content = request.form['message_content'].strip()
@@ -108,6 +113,14 @@ def repeat_function():
     while not stop_event.is_set():
         print("repeat_function loop started")
         current_time = time.strftime("%Y-%m-%d %I:%M:%S %p", time.localtime())
+        
+         # Read channels from channel.txt within the loop
+        with file_lock:
+            with open('channel.txt', 'r') as file:
+                channels = [item.strip().replace('>', '') for item in file.read().split(',') if item.strip()]
+                
+                
+                
         for channel_id in channels:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
                 response = requests.post(url, headers=headers, data=data)
@@ -135,6 +148,8 @@ def start_repeat_function():
     else:
         print("repeat_function is already running.")
         return jsonify({"status": "already running"}), 200
+
+
 
 # Stop Button Function 
 @app.route("/stop_repeat_function", methods=['POST'])
