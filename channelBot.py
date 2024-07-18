@@ -4,7 +4,6 @@ import requests
 import time
 import threading
 from dotenv import load_dotenv, set_key
-import os
 
 
 load_dotenv()
@@ -94,16 +93,15 @@ def update_all():
         file.write(cleaned_channel_text)
     print(f"Updated channel text: {cleaned_channel_text}")
 
+    cleaned_message_content = '\n'.join(line.strip() for line in new_message_content.splitlines())
     with open('buyTemp.txt', 'w') as file:
-        file.write(new_message_content)
+        file.write(cleaned_message_content)
     global data
     data = {'content': new_message_content}
     print(f"Updated message content: {new_message_content}")
     
     return redirect(url_for('home'))
-# Editing Channel 
-# @app.route("/update_channel", methods=['POST'])
-# def update_channel():
+
     
 
 

@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Python ads</title>
-    <link rel="stylesheet" href="static/css/styles.cs'" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -95,7 +94,7 @@
           cols="50"
           required
         >
-      {{channel_text | e}}</textarea
+      {{channel_text}}</textarea
         ><br /><br />
 
         <label for="message_content">Message Content:</label>
@@ -105,7 +104,7 @@
           rows="4"
           cols="50"
         >
-      {{message_content | e}}</textarea
+{{message_content}}</textarea
         >
         <br /><br />
         <label for="interval">Repeat Interval (seconds):</label>
@@ -117,14 +116,14 @@
           required
         /><br /><br />
 
-        <button type="submit">Update all</button>
+        <button type="submit" id="updateButton">Update all</button>
       </form>
 
       <button id="startButton">Start Auto Message</button>
       <button id="stopButton">Stop Auto Message</button>
       <div id="logs">
         <h2>Logs</h2>
-        <pre>{{ logs |e }}</pre>
+        <pre>{{logs}}</pre>
       </div>
     </div>
     <script>
