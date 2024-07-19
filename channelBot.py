@@ -1,17 +1,27 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import discord
 import requests
 import time
 import threading
 from dotenv import load_dotenv, set_key
+=======
+from flask import Flask, render_template, jsonify
+import requests
+import time
+import threading
+# from dotenv import load_dotenv
+
+import os
+>>>>>>> origin/main
 
 
-load_dotenv()
+# load_dotenv()
 
 app = Flask (__name__)
 
-intents = discord.Intents.default()
-client = discord.Client(intents=intents)
+# intents = discord.Intents.default()
+# client = discord.Client(intents=intents)
 
 with open ('channel.txt', 'r') as file:
     # channels = [line.strip() for line in file if line.strip()]
@@ -19,8 +29,14 @@ with open ('channel.txt', 'r') as file:
     
 
 # auth_token = os.getenv("DISCORD_AUTH_TOKEN")
+<<<<<<< HEAD
 with open ('token.txt', 'r') as file:
     auth_token = [item.strip().replace('>', '') for item in file.read().split(',') if item.strip()]
+=======
+
+with open('token.txt', 'r') as file:
+    auth_token = file.read().strip()
+>>>>>>> origin/main
 
 headers = {
     'Authorization': f"{auth_token}"
@@ -33,6 +49,7 @@ data = {'content': message_content}
 
 logs = []
 
+<<<<<<< HEAD
 interval = 5
 
 stop_event = threading.Event()
@@ -106,6 +123,19 @@ def update_all():
 
 
 # Loop message Function 
+=======
+@app.route("/")
+def home():
+    return render_template ('index.html')
+
+@app.route("/logs")
+def get_logs():
+    return jsonify(logs)
+async def fetch_channel_name(channel_id):
+    # channel = await client.fetch_channel(channel_id)
+    channel = await fetch_channel_name(channel_id)
+    return channel
+>>>>>>> origin/main
 def repeat_function():
     last_messages = {}
     while not stop_event.is_set():
@@ -120,6 +150,7 @@ def repeat_function():
                 
                 
         for channel_id in channels:
+<<<<<<< HEAD
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
                 response = requests.post(url, headers=headers, data=data)
                 log_entry = f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n "
@@ -134,6 +165,20 @@ def repeat_function():
             log_file.write(sleep_log_entry)
         print(f"repeat_function sleeping for {interval} sec")
         stop_event.wait(interval)  # Wait for 60 seconds before sending the next message
+=======
+            url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
+            response = requests.post(url, headers=headers, data=data)
+            log_entry = {
+                'time': current_time,
+                'channel': channel_id,
+                'status_code': response.status_code,
+                'response': response.text
+            }
+            logs.append(log_entry)
+            print(response.text)
+            print(f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n")
+        time.sleep(60)  # Wait for 60 seconds before sending the next message
+>>>>>>> origin/main
 
 
 # Start Button Functions 
@@ -166,5 +211,12 @@ def stop_repeat_function():
     return jsonify({"status": "stopped"}), 200
     
 if __name__ == '__main__':
+<<<<<<< HEAD
+=======
+    # Start the repeat_function in a separate thread
+    if not any(thread.name == "RepeatFunctionThread" for thread in threading.enumerate()):
+        thread = threading.Thread(target=repeat_function, name="RepeatFunctionThread", daemon=True)
+        thread.start()
+>>>>>>> origin/main
     app.run(debug=True, host='0.0.0.0', port=5000)
 
