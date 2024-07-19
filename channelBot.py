@@ -22,14 +22,23 @@ with open ('channel.txt', 'r') as file:
 with open ('token.txt', 'r') as file:
     auth_token = [item.strip().replace('>', '') for item in file.read().split(',') if item.strip()]
 
+token_index = 0
+def get_next_token():
+    global token_index
+    token = auth_token[token_index]
+    token_index = (token_index + 1 )% len (auth_token)
+    return token
+
 headers = {
-    'Authorization': f"{auth_token}"
+    'Authorization': f"{get_next_token()}"
 }
 
 with open('buyTemp.txt', 'r') as file:
     message_content = file.read().strip()
     
 data = {'content': message_content}
+
+
 
 logs = []
 
@@ -121,6 +130,7 @@ def repeat_function():
                 
         for channel_id in channels:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
+                headers['Authorization'] = f"{get_next_token()}"
                 response = requests.post(url, headers=headers, data=data)
                 log_entry = f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n "
                 print(log_entry)
