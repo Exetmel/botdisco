@@ -1,1 +1,1 @@
-web: python channelBot.py
+web: gunicorn channelBot:app
