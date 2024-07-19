@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< HEAD
     <title>Python ads</title>
     <style>
       body {
@@ -67,16 +66,6 @@
         text-align: left;
       }
 
-=======
-    <title>Python</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-      }
-      #logs {
-        margin-top: 20px;
-      }
->>>>>>> origin/main
       .log-entry {
         border-bottom: 1px solid #ccc;
         padding: 10px 0;
@@ -84,7 +73,6 @@
     </style>
   </head>
   <body>
-<<<<<<< HEAD
     <div class="container">
       <h1>Discord Free Ad</h1>
       <form action="{{ url_for('update_all') }}" method="post">
@@ -175,33 +163,6 @@
             })
             .catch((error) => console.error("Error:", error));
         });
-=======
-    <h1>Discord Free Ad</h1>
-    <div id="logs"></div>
-
-    <script>
-      async function fetchLogs() {
-        const response = await fetch("/logs");
-        const logs = await response.json();
-        const logsContainer = document.getElementById("logs");
-        logsContainer.innerHTML = "";
-        logs.forEach((log) => {
-          const logEntry = document.createElement("div");
-          logEntry.className = "log-entry";
-          logEntry.innerHTML = `
-                    <p><strong>Time:</strong> ${log.time}</p>
-                    <p><strong>Channel:</strong> ${log.channel}</p>
-                    <p><strong>Status Code:</strong> ${log.status_code}</p>
-                    <p><strong>Response:</strong> ${log.response}</p>
-                `;
-          logsContainer.appendChild(logEntry);
-        });
-      }
-
-      // Fetch logs every 5 seconds
-      setInterval(fetchLogs, 5000);
-      fetchLogs(); // Initial fetch
->>>>>>> origin/main
     </script>
   </body>
 </html>
