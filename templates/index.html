@@ -157,6 +157,9 @@
             .then((data) => {
               console.log(data);
               alert(data.status);
+              if (data.status === "stopped") {
+                location.reload();
+              }
             })
             .catch((error) => console.error("Error:", error));
         });

@@ -122,12 +122,17 @@ def repeat_function():
         for channel_id in channels:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
                 response = requests.post(url, headers=headers, data=data)
-                log_entry = f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n"
+                log_entry = f"Time: {current_time}, Channel: {channel_id}, Status Code: {response.status_code}\n "
                 print(log_entry)
                 with open('logs.txt', 'a') as log_file:
                     log_file.write(log_entry)
                 last_messages[channel_id] = message_content
-        print("repeat_function sleeping for 5 sec")
+                
+        sleep_log_entry = f"repeat_function sleeping for {interval} sec\n"
+        print(sleep_log_entry)
+        with open('logs.txt', 'a') as log_file:
+            log_file.write(sleep_log_entry)
+        print(f"repeat_function sleeping for {interval} sec")
         stop_event.wait(interval)  # Wait for 60 seconds before sending the next message
 
 
