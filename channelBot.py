@@ -4,7 +4,8 @@ import requests
 import time
 import threading
 from dotenv import load_dotenv, set_key
-
+import os
+import sys
 
 # load_dotenv()
 
@@ -77,6 +78,19 @@ def home():
         logs = "No logs available"
         
     return render_template('index.html', token=token, channel_text = channel_text, message_content = message_content, logs = logs, interval=interval)
+
+@app.route("/restart_server", methods=['POST'])
+def restart_server():
+    print("Received Request to restart the server")
+    
+    def restart():
+        time.sleep(1)  # Give the response time to be sent
+        os.execv(sys.executable, ['python'] + sys.argv)
+    
+    threading.Thread(target=restart).start()
+    return redirect(url_for('home'))
+
+
 
 # Edit Token 
 @app.route("/update_all", methods=['POST'])

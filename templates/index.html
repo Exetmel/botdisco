@@ -118,6 +118,9 @@
 
         <button type="submit" id="updateButton">Update all</button>
       </form>
+      <form action="{{ url_for('restart_server') }}" method="post">
+        <button type="submit">Restart Server</button>
+      </form>
 
       <button id="startButton">Start Auto Message</button>
       <button id="stopButton">Stop Auto Message</button>
