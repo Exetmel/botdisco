@@ -73,7 +73,9 @@ def home():
         
     try:
         with open('logs.txt', 'r') as file:
-            logs = file.read()
+            logs = file.readlines()
+            logs.reverse()
+            logs = ''.join(logs)
     except FileNotFoundError:
         logs = "No logs available"
         
