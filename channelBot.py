@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-import discord
 import requests
 import time
 import threading
-from dotenv import load_dotenv, set_key
 import os
 import sys
 
