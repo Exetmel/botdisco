@@ -41,7 +41,7 @@ data = {'content': message_content}
 
 logs = []
 
-interval = 5
+interval = 60
 
 stop_event = threading.Event()
 file_lock = threading.Lock() 
@@ -139,8 +139,6 @@ def repeat_function():
         with file_lock:
             with open('channel.txt', 'r') as file:
                 channels = [item.strip().replace('>', '') for item in file.read().split(',') if item.strip()]
-                
-                
                 
         for channel_id in channels:
                 url = f'https://discord.com/api/v9/channels/{channel_id}/messages'
